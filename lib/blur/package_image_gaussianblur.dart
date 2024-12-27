@@ -30,7 +30,7 @@ class _PackageImageGaussianBlurState extends State<PackageImageGaussianBlur> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Package: image : gaussianBlur'),
+        title: const Text('Package: image gaussianBlur'),
       ),
       body: Center(
         child: Column(
