@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_blurhash/flutter_blurhash.dart';
-import 'package:image/image.dart' as img;
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_image_blur/blur/Image_filtered_widget.dart';
+import 'package:flutter_image_blur/blur/backdrop_filter_widget.dart';
+import 'package:flutter_image_blur/blur/package_blur.dart';
+import 'package:flutter_image_blur/blur/package_flutter_blurhash.dart';
+import 'package:flutter_image_blur/blur/package_image_gaussianblur.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,14 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
     imageFile = File('images/sample.jpg');
   }
 
-  Future<File> copyAssetToLocal(String assetPath) async {
-    final byteData = await rootBundle.load(assetPath);
-    final tempDir = await getTemporaryDirectory();
-    final tempFile = File('${tempDir.path}/sample.jpg');
-    await tempFile.writeAsBytes(byteData.buffer.asUint8List());
-    return tempFile;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
         ),
-        body: SingleChildScrollView(
+        body: Center(
           child: Column(
             children: <Widget>[
               Container(
@@ -82,46 +75,34 @@ class _MyHomePageState extends State<MyHomePage> {
                     : Image.file(blurredImageFile!),
               ),
               ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      if (blurLevel != 0) {
-                        blurLevel = 0;
-                      } else {
-                        blurLevel = 5;
-                      }
-                    });
-                  },
-                  child: const Text('blur')),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageBlur()));
+                },
+                child: const Text('blur'),
+              ),
               ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    loading = true;
-                  });
-                  final file = await copyAssetToLocal('images/sample.jpg');
-                  final data = file.readAsBytesSync();
-                  final img.Image? image = img.decodeImage(data);
-                  if (image != null) {
-                    final blurredImage = img.gaussianBlur(image, radius: 40);
-                    final tempDir = await getTemporaryDirectory();
-                    final tempFile = File('${tempDir.path}/blurred_image.jpg');
-                    tempFile.writeAsBytesSync(img.encodeJpg(blurredImage));
-                    setState(() {
-                      blurredImageFile = tempFile;
-                    });
-                  }
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageImageGaussianBlur()));
                 },
                 child: const Text('image gaussianBlur'),
               ),
-              const SizedBox(
-                width: 300,
-                height: 200,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    BlurHash(hash: "L5H2EC=PM+yV0g-mq.wG9c010J}I"),
-                    Text('おまけ:画像ファイルのblurhash値があればflutter_blurhashを使ってblurを表示できる(blurhash値の生成はできない)'),
-                  ],
-                ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageFlutterBlurhash()));
+                },
+                child: const Text('flutter_blurhash'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const BackdropFilterWidget()));
+                },
+                child: const Text('BackdropFilter'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ImageFilteredWidget()));
+                },
+                child: const Text('ImageFiltered'),
               ),
             ],
           ),
