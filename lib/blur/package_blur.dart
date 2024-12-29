@@ -31,18 +31,13 @@ class _PackageBlurState extends State<PackageBlur> {
               height: 300,
               child: Image.asset('images/sample.jpg').blurred(blur: blurLevel, colorOpacity: 0),
             ),
-            CupertinoSwitch(
-              value: isBlurred,
-              onChanged: (_) {
+            ElevatedButton(
+              onPressed: () {
                 setState(() {
-                  if (isBlurred) {
-                    blurLevel = 0;
-                  } else {
-                    blurLevel = 5;
-                  }
-                  isBlurred = !isBlurred;
+                  blurLevel += 2;
                 });
               },
+              child: const Text('increase blur'),
             ),
           ],
         ),
