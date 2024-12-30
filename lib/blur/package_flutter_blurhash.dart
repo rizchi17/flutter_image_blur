@@ -9,20 +9,7 @@ class PackageFlutterBlurhash extends StatefulWidget {
 }
 
 class _PackageFlutterBlurhashState extends State<PackageFlutterBlurhash> {
-  final String hash = "LKO2?U%2Tw=w]~RBVZRi};RPxuwH";
-  final Color blurHashColor = Colors.blue;
-  bool showBlurHash = false; // BlurHashを表示するフラグ
-
-  @override
-  void initState() {
-    super.initState();
-    // 遅延してBlurHashを表示
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        showBlurHash = true;
-      });
-    });
-  }
+  final String hash = "LLJj@?MxT}R+4o%LIUtRY6of9FoJ";
 
   @override
   Widget build(BuildContext context) {
@@ -31,60 +18,26 @@ class _PackageFlutterBlurhashState extends State<PackageFlutterBlurhash> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Package: flutter_blurhash'),
       ),
-      body: Center(
+      body: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              color: Colors.black12,
-              alignment: Alignment.center,
-              width: 300,
-              height: 300,
-              child: Image.asset('images/sample.jpg'),
-            ),
             Text('hash: $hash'),
             SizedBox(
               width: 300,
               height: 200,
-              child: showBlurHash
-                  ? BlurHash(
-                      hash: hash,
-                      color: blurHashColor,
-                      decodingHeight: 10,
-                      decodingWidth: 10,
-                      image: 'https://picsum.photos/250?image=9',
-                      onDecoded: () {
-                        print('onDecoded');
-                      },
-                      onStarted: () {
-                        print('onStarted');
-                      },
-                      onDisplayed: () {
-                        print('onDisplayed');
-                      },
-                      onReady: () {
-                        print('onReady');
-                      },
-                      duration: const Duration(milliseconds: 3000), // 表示アニメーションの時間
-                    )
-                  : Center(
-                      child: Text(
-                        'デコード待機中...',
-                        style: TextStyle(color: blurHashColor),
-                      ),
-                    ),
-            ),
-            Container(
-              width: 100,
-              height: 50,
-              color: blurHashColor,
-              alignment: Alignment.center,
-              child: const Text(
-                'BlurHash色',
-                style: TextStyle(color: Colors.white),
+              child: BlurHash(
+                hash: hash,
+                color: Colors.blue,
+                decodingHeight: 10,
+                decodingWidth: 10,
+                image: 'https://github.com/rizchi17/flutter_image_blur/blob/main/images/sample.jpg?raw=true',
+                duration: const Duration(seconds: 1),
               ),
             ),
-            const Text('補足: blurhash値の生成はできないのでhttps://blurha.sh/などを利用する必要あり'),
+            const Text('補足: このパッケージではハッシュ文字列の生成はできないのでhttps://blurha.sh/などを利用する必要あり'),
           ],
         ),
       ),
