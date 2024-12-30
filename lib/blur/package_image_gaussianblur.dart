@@ -84,7 +84,7 @@ class _PackageImageGaussianBlurState extends State<PackageImageGaussianBlur> {
               onPressed: () {
                 applyBlur('images/sample.jpg');
               },
-              child: const Text('increase blur'),
+              child: const Text('blur'),
             ),
             blurredImageData != null
                 ? Image.memory(blurredImageData!, width: 300, height: 300)
