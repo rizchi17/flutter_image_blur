@@ -1,5 +1,4 @@
 import 'package:blur/blur.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PackageBlur extends StatefulWidget {
@@ -29,15 +28,22 @@ class _PackageBlurState extends State<PackageBlur> {
               alignment: Alignment.center,
               width: 300,
               height: 300,
-              child: Image.asset('images/sample.jpg').blurred(blur: blurLevel, colorOpacity: 0),
+              child: Image.asset('images/sample.jpg'),
             ),
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  blurLevel += 2;
+                  blurLevel += 5;
                 });
               },
               child: const Text('increase blur'),
+            ),
+            Container(
+              color: Colors.black12,
+              alignment: Alignment.center,
+              width: 300,
+              height: 300,
+              child: Image.asset('images/sample.jpg').blurred(blur: blurLevel, colorOpacity: 0),
             ),
           ],
         ),

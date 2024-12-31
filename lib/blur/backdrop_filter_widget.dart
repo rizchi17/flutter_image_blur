@@ -31,7 +31,7 @@ class _BackdropFilterWidgetState extends State<BackdropFilterWidget> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  sigma += 2;
+                  sigma += 5;
                 });
               },
               child: const Text('increase blur'),

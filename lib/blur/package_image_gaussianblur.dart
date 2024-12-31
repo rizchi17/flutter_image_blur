@@ -21,7 +21,7 @@ class _PackageImageGaussianBlurState extends State<PackageImageGaussianBlur> {
     final mask = img.copyCrop(originalImage, x: 0, y: 0, width: originalImage.width, height: originalImage.height);
     final blurredImage = img.gaussianBlur(
       originalImage,
-      radius: 10,
+      radius: 5,
       mask: mask,
       maskChannel: maskChannel,
     );
