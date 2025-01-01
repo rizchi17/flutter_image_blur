@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_blur/blur/Image_filtered_widget.dart';
+import 'package:flutter_image_blur/blur/image_filtered_widget.dart';
 import 'package:flutter_image_blur/blur/backdrop_filter_widget.dart';
 import 'package:flutter_image_blur/blur/package_blur.dart';
 import 'package:flutter_image_blur/blur/package_flutter_blurhash.dart';
@@ -76,6 +76,18 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ElevatedButton(
                 onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const BackdropFilterWidget()));
+                },
+                child: const Text('BackdropFilter'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ImageFilteredWidget()));
+                },
+                child: const Text('ImageFiltered'),
+              ),
+              ElevatedButton(
+                onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageBlur()));
                 },
                 child: const Text('blur'),
@@ -91,18 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageFlutterBlurhash()));
                 },
                 child: const Text('flutter_blurhash'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const BackdropFilterWidget()));
-                },
-                child: const Text('BackdropFilter'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ImageFilteredWidget()));
-                },
-                child: const Text('ImageFiltered'),
               ),
             ],
           ),

@@ -1,9 +1,6 @@
-import 'dart:io';
-
-import 'package:flutter/services.dart';
-import 'package:image/image.dart' as img;
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as img;
 
 class PackageImageGaussianBlur extends StatefulWidget {
   const PackageImageGaussianBlur({super.key});
@@ -13,16 +10,25 @@ class PackageImageGaussianBlur extends StatefulWidget {
 }
 
 class _PackageImageGaussianBlurState extends State<PackageImageGaussianBlur> {
-  File? blurredImageFile;
-  bool loading = false;
-  int elapsed = 0;
+  Uint8List? blurredImageData;
+  img.Channel maskChannel = img.Channel.luminance;
+  String maskChannelStr = 'luminance';
 
-  Future<File> copyAssetToLocal(String assetPath) async {
-    final byteData = await rootBundle.load(assetPath);
-    final tempDir = await getTemporaryDirectory();
-    final tempFile = File('${tempDir.path}/sample.jpg');
-    await tempFile.writeAsBytes(byteData.buffer.asUint8List());
-    return tempFile;
+  Future<void> applyBlur(String assetPath) async {
+    final assetData = await DefaultAssetBundle.of(context).load(assetPath);
+    final originalBytes = assetData.buffer.asUint8List();
+    final originalImage = img.decodeImage(originalBytes)!;
+    final mask = img.copyCrop(originalImage, x: 0, y: 0, width: originalImage.width, height: originalImage.height);
+    final blurredImage = img.gaussianBlur(
+      originalImage,
+      radius: 5,
+      mask: mask,
+      maskChannel: maskChannel,
+    );
+
+    setState(() {
+      blurredImageData = Uint8List.fromList(img.encodeJpg(blurredImage));
+    });
   }
 
   @override
@@ -34,61 +40,60 @@ class _PackageImageGaussianBlurState extends State<PackageImageGaussianBlur> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              color: Colors.black12,
-              alignment: Alignment.center,
-              width: 300,
-              height: 300,
-              child: Image.asset('images/sample.jpg'),
+            Image.asset('images/sample.jpg', width: 300, height: 300),
+            DropdownButton(
+              items: const [
+                DropdownMenuItem(
+                  value: 'luminance',
+                  child: Text('luminance'),
+                ),
+                DropdownMenuItem(
+                  value: 'red',
+                  child: Text('red'),
+                ),
+                DropdownMenuItem(
+                  value: 'green',
+                  child: Text('green'),
+                ),
+                DropdownMenuItem(
+                  value: 'blue',
+                  child: Text('blur'),
+                ),
+              ],
+              onChanged: (String? value) {
+                if (value != null) {
+                  setState(() {
+                    maskChannelStr = value;
+                    if (value == 'luminance') {
+                      maskChannel = img.Channel.luminance;
+                    } else if (value == 'red') {
+                      maskChannel = img.Channel.red;
+                    } else if (value == 'green') {
+                      maskChannel = img.Channel.green;
+                    } else if (value == 'blue') {
+                      maskChannel = img.Channel.blue;
+                    }
+                  });
+                }
+              },
+              value: maskChannelStr,
             ),
-            Container(
-              color: Colors.black12,
-              alignment: Alignment.center,
-              width: 300,
-              height: 300,
-              child: blurredImageFile == null
-                  ? loading
-                      ? const SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: CircularProgressIndicator(),
-                        )
-                      : ElevatedButton(
-                          child: const Text('create blurred image'),
-                          onPressed: () async {
-                            // 処理時間を計測
-                            Stopwatch stopWatch = Stopwatch();
-                            stopWatch.start();
-
-                            setState(() {
-                              loading = true;
-                            });
-                            final file = await copyAssetToLocal('images/sample.jpg');
-                            final data = file.readAsBytesSync();
-                            final img.Image? image = img.decodeImage(data);
-                            if (image != null) {
-                              final blurredImage = img.gaussianBlur(image, radius: 40);
-                              final tempDir = await getTemporaryDirectory();
-                              final tempFile = File('${tempDir.path}/blurred_image.jpg');
-                              tempFile.writeAsBytesSync(img.encodeJpg(blurredImage));
-                              setState(() {
-                                blurredImageFile = tempFile;
-                                loading = false;
-                              });
-                            }
-
-                            // 計測終了
-                            stopWatch.stop();
-                            setState(() {
-                              elapsed += stopWatch.elapsedMilliseconds;
-                            });
-                          },
-                        )
-                  : Image.file(blurredImageFile!),
+            ElevatedButton(
+              onPressed: () {
+                applyBlur('images/sample.jpg');
+              },
+              child: const Text('blur'),
             ),
-            Text('所要時間 : $elapsed [ms]')
+            blurredImageData != null
+                ? Image.memory(blurredImageData!, width: 300, height: 300)
+                : Container(
+                    alignment: Alignment.center,
+                    width: 300,
+                    height: 300,
+                    child: const CircularProgressIndicator(),
+                  ),
           ],
         ),
       ),

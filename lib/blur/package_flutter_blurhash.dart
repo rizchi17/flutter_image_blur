@@ -18,24 +18,26 @@ class _PackageFlutterBlurhashState extends State<PackageFlutterBlurhash> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Package: flutter_blurhash'),
       ),
-      body: Center(
+      body: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              color: Colors.black12,
-              alignment: Alignment.center,
-              width: 300,
-              height: 300,
-              child: Image.asset('images/sample.jpg'),
-            ),
             Text('hash: $hash'),
             SizedBox(
               width: 300,
               height: 200,
-              child: BlurHash(hash: hash),
+              child: BlurHash(
+                hash: hash,
+                color: Colors.blue,
+                decodingHeight: 10,
+                decodingWidth: 10,
+                image: 'https://github.com/rizchi17/flutter_image_blur/blob/main/images/sample.jpg?raw=true',
+                duration: const Duration(seconds: 1),
+              ),
             ),
-            const Text('補足: blurhash値の生成はできないのでhttps://blurha.sh/などを利用する必要あり'),
+            const Text('補足: このパッケージではハッシュ文字列の生成はできないのでhttps://blurha.sh/などを利用する必要あり'),
           ],
         ),
       ),

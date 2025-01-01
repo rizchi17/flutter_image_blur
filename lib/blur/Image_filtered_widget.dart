@@ -31,7 +31,7 @@ class _ImageFilteredWidgetState extends State<ImageFilteredWidget> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  sigma += 2;
+                  sigma += 5;
                 });
               },
               child: const Text('increase blur'),
